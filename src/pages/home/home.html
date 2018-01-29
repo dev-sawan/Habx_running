@@ -1,14 +1,139 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+  <ion-navbar color="primary">
+    <ion-buttons start> 
+      <button ion-button icon-only menu-toggle>
+        <ion-icon name="menu">
+
+        </ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title *ngIf="!categoryTitle" text-center>Home</ion-title>
+    <ion-title *ngIf="categoryTitle">{{categoryTitle}} posts</ion-title>
+    <ion-buttons *ngIf="loggedUser" end>
+      <button ion-button icon-only (click)="logOut()">
+        <ion-icon class="toolbar-icon" name="log-out"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons *ngIf="!loggedUser" end>
+      <button ion-button icon-only (click)="goToLogin()">
+        <ion-icon class="toolbar-icon" name="log-in"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+
+
+<ion-content class="content">
+  <ion-searchbar
+    [(ngModel)]="searchKeyword"
+    [showCancelButton]="shouldShowCancel"
+    (ionInput)="onCancel($event)"
+    (keyup.enter)="search (searchKeyword,$event)">
+  </ion-searchbar>
+<ion-card>
+  <ion-grid>
+      <ion-row>
+        <ion-col >
+          <ion-card class="symbol" (click)="gotoviewpost()">
+<ion-icon name="ios-eye-outline" text-center><p> View Post</p></ion-icon>
+          </ion-card>
+        </ion-col>
+        <ion-col>
+          <ion-card class="symbol" (click)="goToQuiz()">
+<ion-icon name="ios-flag-outline"  text-center><p>Quiz</p></ion-icon>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-card class="symbol" (click)="goToCategories()">
+    <ion-icon name="ios-grid-outline"  text-center><p>Categories</p></ion-icon>
+            </ion-card>
+          </ion-col>
+          <ion-col>
+            <ion-card class="symbol" (click)="goToAboutus()">
+    <ion-icon name="ios-information-circle-outline" text-center><p>About Us</p></ion-icon>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+</ion-card>
+<!-- <ion-card col-12>
+  <ion-row>
+  <ion-card col-6 >
+
+  </ion-card>
+</ion-row>
+
+<ion-row>
+  <ion-card col-6 >
+
+  </ion-card>
+</ion-row>
+
+</ion-card> -->
+
+
+  <!-- <ion-grid>
+    <ion-row >
+
+
+          <ion-card col-12>
+
+        <ion-card col-6>
+
+<ion-icon name="heart" class="symbol" class="button circle" ></ion-icon>
+      </ion-card>
+
+        <ion-card col-6 side-right>
+
+<ion-icon name="medical" class="symbol" text-center></ion-icon>
+    </ion-card>
+
+          </ion-card>
+
+    </ion-row>
+  </ion-grid> -->
+
+
+
+
+
+<ion-card>
+  <ion-card-header>
+    <h2 text-center class="header">Latest Post</h2>
+  </ion-card-header>
+</ion-card>
+  <ion-card *ngFor="let post of posts" >
+    <ion-card-content >
+        
+
+      <ion-card-title class="postthumb" [innerHTML]="post.title.rendered"></ion-card-title>
+      <p [innerHTML]="post.excerpt.rendered"></p>
+    </ion-card-content>
+    
+    <ion-row no-padding>
+       <ion-col>
+         <button ion-button clear small color="primary" icon-start>
+           {{post.date_gmt.split('T')[0]}}
+         </button>
+       </ion-col>
+       <ion-col text-right>
+         <button ion-button small color="primary" (click)="postTapped($event, post)" icon-start>
+            Read More
+         </button>
+       </ion-col>
+     </ion-row>
+  </ion-card>
+  <ion-infinite-scroll [enabled]="morePagesAvailable" (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Loading more posts ...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
